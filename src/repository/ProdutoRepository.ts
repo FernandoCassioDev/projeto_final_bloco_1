@@ -7,4 +7,5 @@ export interface ProdutoRepository {
   consultarProdutos(idProduto: number): void;
   atualizarProduto(Produto: Produto): void;
   deletarProduto(idProduto: number): void;
+  consultarPorNome(nomeProduto: string): void
 }

@@ -2,6 +2,7 @@ import { Produto } from "../model/Produto";
 import { ProdutoRepository } from "../repository/ProdutoRepository";
 
 export class ProdutoController implements ProdutoRepository {
+ 
   private produtos: Array<Produto> = new Array<Produto>();
 
   public id: number = 0;
@@ -48,6 +49,14 @@ export class ProdutoController implements ProdutoRepository {
       console.log(`Produto não encontrado`);
     }
   }
+
+  consultarPorNome(nomeProduto: string): void {
+    let buscaProduto = this.produtos.filter((c) =>
+        c.nome.includes(nomeProduto)
+      );
+  
+      buscaProduto.forEach(produto => produto.visualizar())
+} 
 
   public gerarId(): number {
     return ++this.id;

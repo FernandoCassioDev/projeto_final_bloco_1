@@ -9,7 +9,7 @@ import { Eletronico } from "./src/model/Eletronico";
 //função principal
 export function main() {
   let opcao, idProduto, anoLancamento, tipo, preco: number;
-  let nome, modelo, tituloJogo: string;
+  let nome, modelo, tituloJogo, nomeProduto: string;
   const tipoProduto = ["Jogo", "Eletronico"];
   let produtoController: ProdutoController = new ProdutoController();
 
@@ -31,7 +31,8 @@ export function main() {
     console.log("            3 - Cadastrar produto                    ");
     console.log("            4 - Atualizar produto                    ");
     console.log("            5 - Deletar Produto                      ");
-    console.log("            6 - Sair                                ");
+    console.log("            6 - Sair                                 ");
+    console.log("            7 - Consultar pelo nome do produto       ");
     console.log("*****************************************************");
     console.log(
       "                                                     ",
@@ -88,7 +89,7 @@ export function main() {
 
         switch (tipo) {
           case 1:
-            tituloJogo = readlinesync.question("Digite o nome do jogo: ");
+            tituloJogo = readlinesync.question("Digite o titulo do jogo: ");
 
             console.log("Digite o ano de lançamento do jogo");
             anoLancamento = readlinesync.questionInt("");
@@ -170,6 +171,13 @@ export function main() {
         );
         produtoController.deletarProduto(idProduto);
 
+        keyPress();
+        break;
+      case 7:
+        console.log("Digite o nome do produto que deseja consultar: ");
+        nomeProduto = readlinesync.question("");
+
+        produtoController.consultarPorNome(nomeProduto)
         keyPress();
         break;
       default:
