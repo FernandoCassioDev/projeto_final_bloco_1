@@ -1,17 +1,23 @@
 //importa a classe color e o readline
 import readlinesync from "readline-sync";
 import { colors } from "./src/util/Colors";
+import { ProdutoController } from "./src/controller/ProdutoController";
+import { Produto } from "./src/model/Produto";
+import { Jogo } from "./src/model/Jogo";
+import { Eletronico } from "./src/model/Eletronico";
 
 //função principal
 export function main() {
-  let opcao: number;
-  const tipoContas = ["Conta Corrente", "Conta Poupança"];
+  let opcao, idProduto, anoLancamento, tipo, preco: number;
+  let nome, modelo, tituloJogo: string;
+  const tipoProduto = ["Jogo", "Eletronico"];
+  let produtoController: ProdutoController = new ProdutoController();
 
   //executa o programa até o usuario escolher sair
   while (true) {
     //mostra o menu
     console.log(
-      colors.fg.yellow,
+      colors.fg.magentastrong,
       colors.bg.black,
       "\n*****************************************************"
     );
@@ -40,7 +46,7 @@ export function main() {
     if (opcao == 6) {
       console.log(
         colors.fg.yellowstrong,
-        "\nCASSIO ELETRONICOS - Sua fonte de eletrônicos"
+        "\nCASSIO ELETRÔNICOS - Sua fonte de eletrônicos"
       );
       console.log(colors.reset, "");
       sobre();
@@ -53,25 +59,116 @@ export function main() {
       case 1:
         console.log("\n\nListar todos os produtos\n\n");
 
+        produtoController.listarProdutos();
         keyPress();
         break;
       case 2:
         console.log("\n\nListar Produto pelo id\n\n");
+
+        console.log("Digite o id do produto que deseja consultar: ");
+        idProduto = readlinesync.questionInt("", {
+          limitMessage: "Digite um id valido",
+        });
+
+        produtoController.consultarProdutos(idProduto);
 
         keyPress();
         break;
       case 3:
         console.log("\n\nCadastrar produto\n\n");
 
+        console.log("Digite as informações do produto que deseja cadastrar: ");
+
+        nome = readlinesync.question("\nDigite o Nome do Produto: ");
+
+        console.log("Escolha o tipo de produto: ");
+        tipo = readlinesync.keyInSelect(tipoProduto, "", { cancel: false }) + 1;
+
+        preco = readlinesync.questionFloat("\nDigite o preco: ");
+
+        switch (tipo) {
+          case 1:
+            tituloJogo = readlinesync.question("Digite o nome do jogo: ");
+
+            console.log("Digite o ano de lançamento do jogo");
+            anoLancamento = readlinesync.questionInt("");
+            produtoController.cadastrarProduto(
+              new Jogo(
+                produtoController.gerarId(),
+                nome,
+                preco,
+                tipo,
+                tituloJogo,
+                anoLancamento
+              )
+            );
+            break;
+          case 2:
+            console.log("Digite o modelo do eletronico: ");
+            modelo = readlinesync.question("");
+            produtoController.cadastrarProduto(
+              new Eletronico(
+                produtoController.gerarId(),
+                nome,
+                preco,
+                tipo,
+                modelo
+              )
+            );
+            break;
+        }
+        keyPress();
         break;
       case 4:
         console.log("\n\nAtualizar produto\n\n");
 
+        idProduto = readlinesync.questionInt("Digite o Id do Produto: ");
 
+        let produto = produtoController.buscarNoArray(idProduto);
+
+        if (produto !== null) {
+          nome = readlinesync.question("Digite o Nome do Produto: ");
+
+          tipo = produto.tipo;
+
+          preco = readlinesync.questionFloat("Digite o preco: ");
+
+          switch (tipo) {
+            case 1:
+              tituloJogo = readlinesync.question("Digite o titulo do jogo: ");
+
+              console.log("Digite o ano de lançamento do jogo: ");
+              anoLancamento = readlinesync.questionInt("");
+
+              produtoController.atualizarProduto(
+                new Jogo(
+                  idProduto,
+                  nome,
+                  preco,
+                  tipo,
+                  tituloJogo,
+                  anoLancamento
+                )
+              );
+              break;
+            case 2:
+              modelo = readlinesync.question("Digite o modelo do eletronico: ");
+
+              produtoController.atualizarProduto(
+                new Eletronico(idProduto, nome, preco, tipo, modelo)
+              );
+              break;
+          }
+        } else console.log("Produto não Encontrado!");
         keyPress();
         break;
       case 5:
         console.log("\n\nDeletar Produto\n\n");
+
+        idProduto = readlinesync.questionInt(
+          "Digite o Id do Produto que deseja deletar: "
+        );
+        produtoController.deletarProduto(idProduto);
 
         keyPress();
         break;
@@ -86,7 +183,10 @@ export function main() {
 
 /* Função com os dados da pessoa desenvolvedora */
 export function sobre(): void {
-  console.log("\n*****************************************************");
+  console.log(
+    colors.fg.magentastrong,
+    "\n*****************************************************"
+  );
   console.log("Projeto Desenvolvido por: Fernando");
   console.log("Fernando Cassio - fernandocassiodev@gmail.com");
   console.log("github.com/Fernandocassiodev");

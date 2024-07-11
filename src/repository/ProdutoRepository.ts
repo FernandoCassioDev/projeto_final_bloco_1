@@ -5,6 +5,6 @@ export interface ProdutoRepository {
   cadastrarProduto(produto: Produto): void;
   listarProdutos(): void;
   consultarProdutos(idProduto: number): void;
-  atualizarProduto(idProduto: number, novoProduto: Produto): void;
+  atualizarProduto(Produto: Produto): void;
   deletarProduto(idProduto: number): void;
 }
